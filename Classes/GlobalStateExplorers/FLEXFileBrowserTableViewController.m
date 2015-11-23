@@ -10,6 +10,7 @@
 #import "FLEXFileBrowserFileOperationController.h"
 #import "FLEXUtility.h"
 #import "FLEXWebViewController.h"
+#import "FLEXTableListViewController.h"
 #import "FLEXImagePreviewViewController.h"
 
 @interface FLEXFileBrowserTableViewCell : UITableViewCell
@@ -247,6 +248,8 @@
             } else if ([[subpath pathExtension] isEqualToString:@"plist"]) {
                 NSData *fileData = [NSData dataWithContentsOfFile:fullPath];
                 prettyString = [[NSPropertyListSerialization propertyListWithData:fileData options:0 format:NULL error:NULL] description];
+            } else if ([[subpath pathExtension] isEqualToString:@"db"]) {
+              drillInViewController = [[FLEXTableListViewController alloc] initWithPath:fullPath];              
             }
             
             if ([prettyString length] > 0) {
