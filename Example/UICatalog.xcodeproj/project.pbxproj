@@ -10,7 +10,6 @@
 		0149BFE2198FAFC700B90A1B /* FLEXFileBrowserSearchOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0149BFE1198FAFC700B90A1B /* FLEXFileBrowserSearchOperation.m */; };
 		01985ABC1984DE9500A65332 /* FLEXArgumentInputFontsPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01985ABB1984DE9500A65332 /* FLEXArgumentInputFontsPickerView.m */; };
 		044E61A81C03602A0044A29F /* FLEXDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E619F1C03602A0044A29F /* FLEXDatabaseManager.m */; };
-		044E61A91C03602A0044A29F /* FLEXlala.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61A11C03602A0044A29F /* FLEXlala.m */; };
 		044E61AA1C03602A0044A29F /* FLEXPTMultiColumnTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61A31C03602A0044A29F /* FLEXPTMultiColumnTableView.m */; };
 		044E61AB1C03602A0044A29F /* FLEXTableContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61A51C03602A0044A29F /* FLEXTableContentViewController.m */; };
 		044E61AC1C03602A0044A29F /* FLEXTableListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61A71C03602A0044A29F /* FLEXTableListViewController.m */; };
@@ -125,8 +124,6 @@
 		01985ABB1984DE9500A65332 /* FLEXArgumentInputFontsPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXArgumentInputFontsPickerView.m; sourceTree = "<group>"; };
 		044E619E1C03602A0044A29F /* FLEXDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXDatabaseManager.h; sourceTree = "<group>"; };
 		044E619F1C03602A0044A29F /* FLEXDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXDatabaseManager.m; sourceTree = "<group>"; };
-		044E61A01C03602A0044A29F /* FLEXlala.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXlala.h; sourceTree = "<group>"; };
-		044E61A11C03602A0044A29F /* FLEXlala.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXlala.m; sourceTree = "<group>"; };
 		044E61A21C03602A0044A29F /* FLEXPTMultiColumnTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXPTMultiColumnTableView.h; sourceTree = "<group>"; };
 		044E61A31C03602A0044A29F /* FLEXPTMultiColumnTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXPTMultiColumnTableView.m; sourceTree = "<group>"; };
 		044E61A41C03602A0044A29F /* FLEXTableContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXTableContentViewController.h; sourceTree = "<group>"; };
@@ -352,8 +349,6 @@
 			children = (
 				044E619E1C03602A0044A29F /* FLEXDatabaseManager.h */,
 				044E619F1C03602A0044A29F /* FLEXDatabaseManager.m */,
-				044E61A01C03602A0044A29F /* FLEXlala.h */,
-				044E61A11C03602A0044A29F /* FLEXlala.m */,
 				044E61A21C03602A0044A29F /* FLEXPTMultiColumnTableView.h */,
 				044E61A31C03602A0044A29F /* FLEXPTMultiColumnTableView.m */,
 				044E61A41C03602A0044A29F /* FLEXTableContentViewController.h */,
@@ -865,7 +860,6 @@
 				944F7499197B458C009AB039 /* FLEXArgumentInputFontView.m in Sources */,
 				944F7496197B458C009AB039 /* FLEXRuntimeUtility.m in Sources */,
 				944F7491197B458C009AB039 /* FLEXSetExplorerViewController.m in Sources */,
-				044E61A91C03602A0044A29F /* FLEXlala.m in Sources */,
 				944F74AF197B458C009AB039 /* FLEXFileBrowserTableViewController.m in Sources */,
 				535682BB18F3670300BAAD62 /* AAPLTextFieldViewController.m in Sources */,
 				944F749F197B458C009AB039 /* FLEXArgumentInputSwitchView.m in Sources */,

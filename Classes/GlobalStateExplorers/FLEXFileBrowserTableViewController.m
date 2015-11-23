@@ -249,7 +249,7 @@
                 NSData *fileData = [NSData dataWithContentsOfFile:fullPath];
                 prettyString = [[NSPropertyListSerialization propertyListWithData:fileData options:0 format:NULL error:NULL] description];
             } else if ([[subpath pathExtension] isEqualToString:@"db"]) {
-              drillInViewController = [[FLEXTableListViewController alloc] initWithPath:fullPath];              
+              drillInViewController = [[FLEXTableListViewController alloc] initWithPath:fullPath];
             }
             
             if ([prettyString length] > 0) {

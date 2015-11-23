@@ -103,7 +103,6 @@ static const CGFloat kColumnMargin = 1;
   UITableView *tableView   = [[UITableView alloc] init];
   tableView.delegate       = self;
   tableView.dataSource     = self;
-  tableView.bounces        = NO;
   tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
   
   [self addSubview:scrollView];

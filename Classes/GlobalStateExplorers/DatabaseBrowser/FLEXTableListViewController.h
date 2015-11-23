@@ -11,4 +11,5 @@
 @interface FLEXTableListViewController : UITableViewController
 
 - (instancetype)initWithPath:(NSString *)path;
+
 @end

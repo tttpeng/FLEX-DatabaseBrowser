@@ -23,13 +23,10 @@
 @implementation FLEXTableListViewController
 
 
-
-
 - (instancetype)initWithPath:(NSString *)path
 {
-  self = [super init];
+  self = [super initWithStyle:UITableViewStyleGrouped];
   if (self) {
-//    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"main.db"];
     _databasePath = [path copy];
     _dbm = [[FLEXDatabaseManager alloc] initWithPath:path];
     [_dbm open];
@@ -42,6 +39,7 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
+//  self.b
   
 }
 
@@ -54,7 +52,6 @@
   }
   self.tables = array;
 }
-
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -72,12 +69,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   FLEXTableContentViewController *contentViewController = [[FLEXTableContentViewController alloc] init];
-  contentViewController.contensArray = [_dbm queryAllDataWithTableName:self.tables[indexPath.row]];
-
-  contentViewController.columnsArray = [_dbm queryAllColumnsWithTableName:self.tables[indexPath.row]];
-  NSLog(@"=------>%@",contentViewController.columnsArray);
   
+  contentViewController.contensArray = [_dbm queryAllDataWithTableName:self.tables[indexPath.row]];
+  contentViewController.columnsArray = [_dbm queryAllColumnsWithTableName:self.tables[indexPath.row]];
+ 
+  contentViewController.title = self.tables[indexPath.row];
   [self.navigationController pushViewController:contentViewController animated:YES];
+}
+
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+  
+  return [NSString stringWithFormat:@"%lu tables", (unsigned long)self.tables.count];
 }
 
 @end

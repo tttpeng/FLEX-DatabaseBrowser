@@ -23,14 +23,52 @@
 {
   self = [super init];
   if (self) {
-    _multiColumView = [[FLEXPTMultiColumnTableView alloc] initWithFrame:CGRectMake(0, 64, 1024, 700)];
-    _multiColumView.backgroundColor = [UIColor whiteColor];
-    _multiColumView.dataSource = self;
+    
+    CGRect rectStatus = [UIApplication sharedApplication].statusBarFrame;
+    CGFloat y = 64;
+    if (rectStatus.size.height == 0) {
+      y = 32;
+    }
+    _multiColumView = [[FLEXPTMultiColumnTableView alloc] initWithFrame:
+                       CGRectMake(0, y, self.view.frame.size.width, self.view.frame.size.height - y)];
+    
+    _multiColumView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _multiColumView.backgroundColor  = [UIColor whiteColor];
+    _multiColumView.dataSource       = self;
+    self.view.backgroundColor        = [UIColor redColor];
     [self.view addSubview:_multiColumView];
   }
   return self;
 }
 
+
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
+              withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator
+{
+  [super willTransitionToTraitCollection:newCollection
+               withTransitionCoordinator:coordinator];
+  [coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+    if (newCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) {
+
+      _multiColumView.frame = CGRectMake(0, 32, self.view.frame.size.width, self.view.frame.size.height - 32);
+      
+      //To Do: modify something for compact vertical size
+    } else {
+      _multiColumView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64);
+      NSLog(@"--->222");
+      //To Do: modify something for other vertical size
+    }
+    [self.view setNeedsLayout];
+  } completion:nil];
+}
+
+//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+//{
+//  CGRect rectNav = self.navigationController.navigationBar.frame;
+//  [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+//  
+//}
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
