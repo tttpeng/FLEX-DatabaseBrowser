@@ -7,12 +7,12 @@
 //
 
 #import "FLEXTableContentViewController.h"
-#import "FLEXPTMultiColumnTableView.h"
+#import "FLEXMultiColumnTableView.h"
 
 
 @interface FLEXTableContentViewController ()<FLEXMultiColumnTableViewDataSource>
 
-@property (nonatomic, strong)FLEXPTMultiColumnTableView *multiColumView;
+@property (nonatomic, strong)FLEXMultiColumnTableView *multiColumView;
 
 @end
 
@@ -29,7 +29,7 @@
     if (rectStatus.size.height == 0) {
       y = 32;
     }
-    _multiColumView = [[FLEXPTMultiColumnTableView alloc] initWithFrame:
+    _multiColumView = [[FLEXMultiColumnTableView alloc] initWithFrame:
                        CGRectMake(0, y, self.view.frame.size.width, self.view.frame.size.height - y)];
     
     _multiColumView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -52,34 +52,25 @@
     if (newCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) {
 
       _multiColumView.frame = CGRectMake(0, 32, self.view.frame.size.width, self.view.frame.size.height - 32);
-      
-      //To Do: modify something for compact vertical size
-    } else {
+    }
+    else {
       _multiColumView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64);
-      NSLog(@"--->222");
-      //To Do: modify something for other vertical size
     }
     [self.view setNeedsLayout];
   } completion:nil];
 }
 
-//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-//{
-//  CGRect rectNav = self.navigationController.navigationBar.frame;
-//  [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-//  
-//}
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
   [self.multiColumView reloadData];
   
 }
-- (NSInteger)numberOfColumnsInTableView:(FLEXPTMultiColumnTableView *)tableView
+- (NSInteger)numberOfColumnsInTableView:(FLEXMultiColumnTableView *)tableView
 {
   return self.columnsArray.count;
 }
-- (NSInteger)numberOfRowsInTableView:(FLEXPTMultiColumnTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(FLEXMultiColumnTableView *)tableView
 {
   return self.contensArray.count;
 }
@@ -100,7 +91,6 @@
 }
 - (NSString *)contentAtColumn:(NSInteger)column row:(NSInteger)row
 {
-  NSLog(@"12----->%@",self.columnsArray);
   if (self.contensArray.count > row) {
     NSDictionary *dic = self.contensArray[row];
     if (self.contensArray.count > column) {
@@ -110,27 +100,40 @@
   return @"xxxxx";
 }
 
-- (CGFloat)multiColumnTableView:(FLEXPTMultiColumnTableView *)tableView
+- (NSArray *)contentAtRow:(NSInteger)row
+{
+  if (self.contensArray.count > row) {
+    NSDictionary *dic = self.contensArray[row];
+    return  [dic allValues];
+  }
+  return nil;
+}
+- (CGFloat)multiColumnTableView:(FLEXMultiColumnTableView *)tableView
       heightForContentCellInRow:(NSInteger)row
 {
   return 40;
 }
 
-- (CGFloat)multiColumnTableView:(FLEXPTMultiColumnTableView *)tableView
+- (CGFloat)multiColumnTableView:(FLEXMultiColumnTableView *)tableView
     widthForContentCellInColumn:(NSInteger)column
 {
   return 100;
 }
 
 
-- (CGFloat)heightForTopHeaderInTableView:(FLEXPTMultiColumnTableView *)tableView
+- (CGFloat)heightForTopHeaderInTableView:(FLEXMultiColumnTableView *)tableView
 {
   return 50;
 }
 
-- (CGFloat)WidthForLeftHeaderInTableView:(FLEXPTMultiColumnTableView *)tableView
+- (CGFloat)WidthForLeftHeaderInTableView:(FLEXMultiColumnTableView *)tableView
 {
-  return 80;
+  NSString *str = [NSString stringWithFormat:@"%d",self.contensArray.count];
+  NSDictionary *attrs = @{@"NSFontAttributeName":[UIFont systemFontOfSize:17.0]};
+  CGSize size =   [str boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 14)
+                                    options:NSStringDrawingUsesLineFragmentOrigin
+                                 attributes:attrs context:nil].size;
+  return size.width + 20;
 }
 
 

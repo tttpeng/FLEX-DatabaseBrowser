@@ -6,7 +6,8 @@
 //  Copyright © 2015年 Peng Tao. All rights reserved.
 //
 
-#import "FLEXPTMultiColumnTableView.h"
+#import "FLEXMultiColumnTableView.h"
+#import "FLEXTableContentCell.h"
 
 
 typedef NS_ENUM(NSInteger,UIViewSeparatorLocation) {
@@ -16,18 +17,21 @@ typedef NS_ENUM(NSInteger,UIViewSeparatorLocation) {
   UIViewSeparatorLocationRight
 };
 
-@interface FLEXPTMultiColumnTableView ()
-<UITableViewDataSource, UITableViewDelegate,UIScrollViewDelegate>
+@interface FLEXMultiColumnTableView ()
+<UITableViewDataSource, UITableViewDelegate,UIScrollViewDelegate, FLEXTableContentCellDatasource>
 
-@property (nonatomic, strong) UIScrollView *contentScrollView;
-@property (nonatomic, strong) UIScrollView *headerScrollView;
-@property (nonatomic, strong) UITableView  *leftTableView;
-@property (nonatomic, strong) UITableView  *contentTableView;
+@property (nonatomic, weak) UIScrollView *contentScrollView;
+@property (nonatomic, weak) UIScrollView *headerScrollView;
+@property (nonatomic, weak) UITableView  *leftTableView;
+@property (nonatomic, weak) UITableView  *contentTableView;
+@property (nonatomic, weak) UIView       *leftHeader;
+
+@property (nonatomic, strong) NSArray *rowData;
 @end
 
 static const CGFloat kColumnMargin = 1;
 
-@implementation FLEXPTMultiColumnTableView
+@implementation FLEXMultiColumnTableView
 
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -65,8 +69,15 @@ static const CGFloat kColumnMargin = 1;
   self.contentTableView.frame        = CGRectMake(0, 0, contentWidth + [self numberOfColumns] * [self columnMargin] , height - 50);
   self.contentScrollView.frame       = CGRectMake(leftHeaderWidth, topheaderHeight, width - leftHeaderWidth, height - topheaderHeight);
   self.contentScrollView.contentSize = self.contentTableView.frame.size;
+  self.leftHeader.frame              = CGRectMake(0, 0, [self leftHeaderWidth], [self topHeaderHeight]);
   
+  for (UIView *subView in self.leftHeader.subviews) {
+    [subView removeFromSuperview];
+  }
+  [self addSeparatorLineInView:self.leftHeader andWidth:1 andLocation:UIViewSeparatorLocationRight andColor:[UIColor grayColor]];
+  [self addSeparatorLineInView:self.leftHeader andWidth:1 andLocation:UIViewSeparatorLocationBottom andColor:[UIColor grayColor]];
 }
+
 
 
 - (void)loadUI
@@ -119,8 +130,14 @@ static const CGFloat kColumnMargin = 1;
   leftTableView.delegate = self;
   leftTableView.dataSource = self;
   leftTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-  [self addSubview:leftTableView];
+  
   self.leftTableView = leftTableView;
+  UIView *leftHeader = [[UIView alloc] init];
+  leftHeader.backgroundColor = [UIColor colorWithWhite:0.950 alpha:1.000];
+  self.leftHeader = leftHeader;
+  [self addSubview:leftHeader];
+  [self addSubview:leftTableView];
+  
 }
 
 
@@ -166,69 +183,47 @@ static const CGFloat kColumnMargin = 1;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   if (tableView != self.leftTableView) {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"contentViewCellID"];
-    if (!cell) {
-      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                    reuseIdentifier:@"contentViewCellID"];
-    }
-    for (UIView *view  in cell.contentView.subviews) {
-      [view removeFromSuperview];
-    }
-    cell.backgroundColor = [UIColor lightGrayColor];
     
-    CGFloat x = 0.0;
-    CGFloat w = 0.0;
-    CGFloat h = [self contentHeightForRow:indexPath.row];
-    for (int i = 0; i < [self numberOfColumns] ; i++) {
-      w = [self contentWidthForColumn:i];
+    
+    FLEXTableContentCell *cell = [FLEXTableContentCell cellWithTableView:tableView height:[self contentHeightForRow:indexPath.row] withDataSource:self];
+    for (int i = 0 ; i < cell.labels.count; i++) {
+      UILabel *label = cell.labels[i];
+      label.text = [NSString stringWithFormat:@"%@",self.rowData[i]];
       
-      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(x, 0, w , h - 1)];
-      view.backgroundColor = [UIColor whiteColor];
-      
-      UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, w, h - 1)];
-      label.text = [self.dataSource contentAtColumn:i row:indexPath.row];
-      [view addSubview:label];
-      
-      x = x + w + 1;
-      
-      if (i == [self.dataSource numberOfColumnsInTableView:self] - 1) {
-        w += 1;
-      }
-      [cell.contentView addSubview:view];
     }
+    
     return cell;
   }
   else {
     
+    UILabel *label;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"leftHeaderViewCellID"];
     if (!cell) {
       cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                     reuseIdentifier:@"leftHeaderViewCellID"];
+      CGFloat height = [self contentHeightForRow:indexPath.row];
+      CGFloat width  = [self leftHeaderWidth];
+      
+      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+      view.backgroundColor = [UIColor colorWithWhite:0.950 alpha:1.000];
+      [cell.contentView addSubview:view];
+      
+      [self addSeparatorLineInView:view
+                          andWidth:1
+                       andLocation:UIViewSeparatorLocationRight
+                          andColor:[UIColor lightGrayColor]];
+      [self addSeparatorLineInView:view
+                          andWidth:1
+                       andLocation:UIViewSeparatorLocationBottom
+                          andColor:[UIColor lightGrayColor]];
+      
+      
+      label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [self leftHeaderWidth], [self contentHeightForRow:indexPath.row])];
+      [view addSubview:label];
+      label.textAlignment = NSTextAlignmentCenter;
     }
-
     
-    for (UIView *view  in cell.contentView.subviews) {
-      [view removeFromSuperview];
-    }
-    
-    CGFloat height = [self contentHeightForRow:indexPath.row];
-    CGFloat width  = [self leftHeaderWidth];
-    
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-    view.backgroundColor = [UIColor whiteColor];
-    [cell.contentView addSubview:view];
-    
-    [self addSeparatorLineInView:view
-                        andWidth:1
-                     andLocation:UIViewSeparatorLocationRight
-                        andColor:[UIColor lightGrayColor]];
-    [self addSeparatorLineInView:view
-                        andWidth:1
-                     andLocation:UIViewSeparatorLocationBottom
-                        andColor:[UIColor lightGrayColor]];
-    
-    cell.textLabel.text = [self.dataSource rowNameInRow:indexPath.row];
-    
+    label.text = [self.dataSource rowNameInRow:indexPath.row];
     return cell;
     
   }
@@ -330,6 +325,21 @@ static const CGFloat kColumnMargin = 1;
 - (CGFloat)columnMargin
 {
   return kColumnMargin;
+}
+
+
+#pragma mark -
+#pragma mark - Cell DataSource
+
+- (NSInteger)numberColumnsForCell
+{
+  return [self.dataSource numberOfColumnsInTableView:self];
+}
+
+
+- (CGFloat)tableContentCell:(FLEXTableContentCell *)cell widthForntCellInColumn:(NSInteger)column
+{
+  return [self contentWidthForColumn:column];
 }
 
 
