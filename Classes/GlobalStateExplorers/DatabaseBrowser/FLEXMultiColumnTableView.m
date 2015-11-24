@@ -8,6 +8,7 @@
 
 #import "FLEXMultiColumnTableView.h"
 #import "FLEXTableContentCell.h"
+#import "FLEXTableLeftCell.h"
 
 
 typedef NS_ENUM(NSInteger,UIViewSeparatorLocation) {
@@ -66,6 +67,7 @@ static const CGFloat kColumnMargin = 1;
   
   self.leftTableView.frame           = CGRectMake(0, topheaderHeight, leftHeaderWidth, height - topheaderHeight);
   self.headerScrollView.frame        = CGRectMake(leftHeaderWidth, 0, width - leftHeaderWidth, topheaderHeight);
+  self.headerScrollView.contentSize  = CGSizeMake( self.contentTableView.frame.size.width, self.headerScrollView.frame.size.height);
   self.contentTableView.frame        = CGRectMake(0, 0, contentWidth + [self numberOfColumns] * [self columnMargin] , height - 50);
   self.contentScrollView.frame       = CGRectMake(leftHeaderWidth, topheaderHeight, width - leftHeaderWidth, height - topheaderHeight);
   self.contentScrollView.contentSize = self.contentTableView.frame.size;
@@ -183,47 +185,20 @@ static const CGFloat kColumnMargin = 1;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   if (tableView != self.leftTableView) {
-    
-    
-    FLEXTableContentCell *cell = [FLEXTableContentCell cellWithTableView:tableView height:[self contentHeightForRow:indexPath.row] withDataSource:self];
+    self.rowData = [self.dataSource contentAtRow:indexPath.row];
+    FLEXTableContentCell *cell = [FLEXTableContentCell cellWithTableView:tableView
+                                                                  height:[self contentHeightForRow:indexPath.row]
+                                                          withDataSource:self];
     for (int i = 0 ; i < cell.labels.count; i++) {
       UILabel *label = cell.labels[i];
       label.text = [NSString stringWithFormat:@"%@",self.rowData[i]];
-      
     }
-    
     return cell;
   }
   else {
-    
-    UILabel *label;
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"leftHeaderViewCellID"];
-    if (!cell) {
-      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                    reuseIdentifier:@"leftHeaderViewCellID"];
-      CGFloat height = [self contentHeightForRow:indexPath.row];
-      CGFloat width  = [self leftHeaderWidth];
-      
-      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-      view.backgroundColor = [UIColor colorWithWhite:0.950 alpha:1.000];
-      [cell.contentView addSubview:view];
-      
-      [self addSeparatorLineInView:view
-                          andWidth:1
-                       andLocation:UIViewSeparatorLocationRight
-                          andColor:[UIColor lightGrayColor]];
-      [self addSeparatorLineInView:view
-                          andWidth:1
-                       andLocation:UIViewSeparatorLocationBottom
-                          andColor:[UIColor lightGrayColor]];
-      
-      
-      label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [self leftHeaderWidth], [self contentHeightForRow:indexPath.row])];
-      [view addSubview:label];
-      label.textAlignment = NSTextAlignmentCenter;
-    }
-    
-    label.text = [self.dataSource rowNameInRow:indexPath.row];
+    FLEXTableLeftCell *cell = [FLEXTableLeftCell cellWithTableView:tableView
+                                                            height:[self contentHeightForRow:indexPath.row]];
+    cell.titlelabel.text = [self.dataSource rowNameInRow:indexPath.row];
     return cell;
     
   }
@@ -244,7 +219,7 @@ static const CGFloat kColumnMargin = 1;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
   if (scrollView == self.contentScrollView) {
-    self.headerScrollView.contentOffset = CGPointMake(self.contentScrollView.contentOffset.x, 0);
+    self.headerScrollView.contentOffset = scrollView.contentOffset;
   }
   else if (scrollView == self.headerScrollView) {
     self.contentScrollView.contentOffset = scrollView.contentOffset;
@@ -375,7 +350,6 @@ static const CGFloat kColumnMargin = 1;
       [view addSubview:line];
       break;
   }
-  
 }
 
 - (UIColor *)randomColor{

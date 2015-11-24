@@ -15,7 +15,6 @@
 - (CGFloat)heightForCell;
 - (CGFloat)tableContentCell:(FLEXTableContentCell *)cell widthForntCellInColumn:(NSInteger)column;
 
-
 @end
 
 @interface FLEXTableContentCell : UITableViewCell

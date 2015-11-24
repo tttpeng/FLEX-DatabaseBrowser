@@ -35,6 +35,7 @@
     _multiColumView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _multiColumView.backgroundColor  = [UIColor whiteColor];
     _multiColumView.dataSource       = self;
+    self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor        = [UIColor redColor];
     [self.view addSubview:_multiColumView];
   }
@@ -78,7 +79,6 @@
 
 - (NSString *)columnNameInColumn:(NSInteger)column
 {
-    NSLog(@"----->%@",self.columnsArray);
     return self.columnsArray[column];
 }
 
@@ -97,7 +97,7 @@
       return [NSString stringWithFormat:@"%@",[dic objectForKey:self.columnsArray[column]]];
     }
   }
-  return @"xxxxx";
+  return @"this is bug";
 }
 
 - (NSArray *)contentAtRow:(NSInteger)row
@@ -128,7 +128,7 @@
 
 - (CGFloat)WidthForLeftHeaderInTableView:(FLEXMultiColumnTableView *)tableView
 {
-  NSString *str = [NSString stringWithFormat:@"%d",self.contensArray.count];
+  NSString *str = [NSString stringWithFormat:@"%lu",(unsigned long)self.contensArray.count];
   NSDictionary *attrs = @{@"NSFontAttributeName":[UIFont systemFontOfSize:17.0]};
   CGSize size =   [str boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 14)
                                     options:NSStringDrawingUsesLineFragmentOrigin
