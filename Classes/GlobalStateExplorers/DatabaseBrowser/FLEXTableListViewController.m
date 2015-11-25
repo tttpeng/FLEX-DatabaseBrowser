@@ -35,12 +35,9 @@
   return self;
 }
 
-
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-//  self.b
-  
 }
 
 - (void)getAllTables
@@ -60,7 +57,11 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@""];
+  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FLEXTableListViewControllerCell"];
+  if (!cell) {
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                  reuseIdentifier:@"FLEXTableListViewControllerCell"];
+  }
   cell.textLabel.text = self.tables[indexPath.row];
   return cell;
 }
@@ -79,8 +80,7 @@
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-  
+{  
   return [NSString stringWithFormat:@"%lu tables", (unsigned long)self.tables.count];
 }
 

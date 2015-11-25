@@ -11,29 +11,25 @@
 @implementation FLEXTableLeftCell
 
 + (instancetype)cellWithTableView:(UITableView *)tableView
-                           height:(CGFloat)height
 {
   static NSString *identifier = @"FLEXTableLeftCell";
   FLEXTableLeftCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+  
   if (!cell) {
     cell = [[FLEXTableLeftCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    
-    CGFloat width  = tableView.frame.size.width;
-    
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-    view.backgroundColor = [UIColor colorWithWhite:0.950 alpha:1.000];
-    [cell.contentView addSubview:view];
-    
-   UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width - 1, height - 1)];
-    textLabel.textAlignment = NSTextAlignmentCenter;
+    UILabel *textLabel               = [[UILabel alloc] initWithFrame:CGRectZero];
+    textLabel.textAlignment          = NSTextAlignmentCenter;
+    textLabel.font                   = [UIFont systemFontOfSize:13.0];
+    textLabel.backgroundColor = [UIColor clearColor];
     [cell.contentView addSubview:textLabel];
-    cell.contentView.backgroundColor = [UIColor lightGrayColor];
-    textLabel.backgroundColor = [UIColor whiteColor];
     cell.titlelabel = textLabel;
-    
   }
   return cell;
-
 }
 
+- (void)layoutSubviews
+{
+  [super layoutSubviews];
+  self.titlelabel.frame = self.contentView.frame;
+}
 @end

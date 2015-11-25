@@ -8,6 +8,7 @@
 
 #import "FLEXTableContentViewController.h"
 #import "FLEXMultiColumnTableView.h"
+#import "FLEXWebViewController.h"
 
 
 @interface FLEXTableContentViewController ()<FLEXMultiColumnTableViewDataSource, FLEXMultiColumnTableViewDelegate>
@@ -32,48 +33,16 @@
     _multiColumView = [[FLEXMultiColumnTableView alloc] initWithFrame:
                        CGRectMake(0, y, self.view.frame.size.width, self.view.frame.size.height - y)];
     
-    _multiColumView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _multiColumView.backgroundColor  = [UIColor whiteColor];
-    _multiColumView.dataSource       = self;
-    _multiColumView.delegate = self;
+    _multiColumView.autoresizingMask          = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _multiColumView.backgroundColor           = [UIColor whiteColor];
+    _multiColumView.dataSource                = self;
+    _multiColumView.delegate                  = self;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.view.backgroundColor        = [UIColor redColor];
     [self.view addSubview:_multiColumView];
   }
   return self;
 }
 
-
-- (void)didClickWithText:(NSString *)content
-{
-  UIViewController *viewController = [[UIViewController alloc] init];
-  UILabel *label = [[UILabel alloc] initWithFrame:viewController.view.frame];
-  label.text = content;
-  label.numberOfLines = 0;
-  label.backgroundColor = [UIColor whiteColor];
-  [viewController.view addSubview:label];
-  
-  [self.navigationController pushViewController:viewController animated:YES];
-}
-
-
-
-- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
-              withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator
-{
-  [super willTransitionToTraitCollection:newCollection
-               withTransitionCoordinator:coordinator];
-  [coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-    if (newCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) {
-
-      _multiColumView.frame = CGRectMake(0, 32, self.view.frame.size.width, self.view.frame.size.height - 32);
-    }
-    else {
-      _multiColumView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64);
-    }
-    [self.view setNeedsLayout];
-  } completion:nil];
-}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -81,6 +50,10 @@
   [self.multiColumView reloadData];
   
 }
+
+#pragma mark -
+#pragma mark MultiColumnTableView DataSource
+
 - (NSInteger)numberOfColumnsInTableView:(FLEXMultiColumnTableView *)tableView
 {
   return self.columnsArray.count;
@@ -131,13 +104,13 @@
 - (CGFloat)multiColumnTableView:(FLEXMultiColumnTableView *)tableView
     widthForContentCellInColumn:(NSInteger)column
 {
-  return 100;
+  return 120;
 }
 
 
 - (CGFloat)heightForTopHeaderInTableView:(FLEXMultiColumnTableView *)tableView
 {
-  return 50;
+  return 30;
 }
 
 - (CGFloat)WidthForLeftHeaderInTableView:(FLEXMultiColumnTableView *)tableView
@@ -148,6 +121,36 @@
                                     options:NSStringDrawingUsesLineFragmentOrigin
                                  attributes:attrs context:nil].size;
   return size.width + 20;
+}
+
+
+#pragma mark -
+#pragma mark MultiColumnTableView Delegate
+
+- (void)multiColumnTableView:(FLEXMultiColumnTableView *)tableView labelDidTapWithText:(NSString *)text
+{
+  FLEXWebViewController * detailViewController = [[FLEXWebViewController alloc] initWithText:text];
+  [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+#pragma mark -
+#pragma mark About Transition
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
+              withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator
+{
+  [super willTransitionToTraitCollection:newCollection
+               withTransitionCoordinator:coordinator];
+  [coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+    if (newCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) {
+      
+      _multiColumView.frame = CGRectMake(0, 32, self.view.frame.size.width, self.view.frame.size.height - 32);
+    }
+    else {
+      _multiColumView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64);
+    }
+    [self.view setNeedsLayout];
+  } completion:nil];
 }
 
 

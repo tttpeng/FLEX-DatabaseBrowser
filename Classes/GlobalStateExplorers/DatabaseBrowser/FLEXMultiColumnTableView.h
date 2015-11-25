@@ -12,8 +12,9 @@
 
 @protocol FLEXMultiColumnTableViewDelegate <NSObject>
 
+@optional
+- (void)multiColumnTableView:(FLEXMultiColumnTableView *)tableView labelDidTapWithText:(NSString *)text;
 
-- (void)didClickWithText:(NSString *)content;
 @end
 @protocol FLEXMultiColumnTableViewDataSource <NSObject>
 

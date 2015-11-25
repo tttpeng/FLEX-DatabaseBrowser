@@ -12,7 +12,6 @@
 
 @property (nonatomic, weak) UILabel *titlelabel;
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                           height:(CGFloat)height;
++ (instancetype)cellWithTableView:(UITableView *)tableView;
 
 @end

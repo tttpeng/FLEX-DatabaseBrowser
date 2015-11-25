@@ -25,8 +25,8 @@ static NSString *const QUERY_TABLENAMES_SQL = @"SELECT name FROM sqlite_master W
   self = [super init];
   
   if (self) {
-    _databasePath               = [aPath copy];
-    _db                         = nil;
+    _databasePath = [aPath copy];
+    _db           = nil;
   }
   return self;
 }
@@ -43,8 +43,6 @@ static NSString *const QUERY_TABLENAMES_SQL = @"SELECT name FROM sqlite_master W
   }
   return YES;
 }
-
-
 
 - (NSArray *)queryAllTables
 {
@@ -68,11 +66,9 @@ static NSString *const QUERY_TABLENAMES_SQL = @"SELECT name FROM sqlite_master W
   return [self executeQuery:sql];
 }
 
-
-
-
 #pragma mark -
 #pragma mark - Private
+
 - (NSArray *)executeQuery:(NSString *)sql
 {
   NSMutableArray *resultArray = [NSMutableArray array];
@@ -127,7 +123,7 @@ static NSString *const QUERY_TABLENAMES_SQL = @"SELECT name FROM sqlite_master W
   return returnValue;
 }
 
-- (NSString*)stringForColumnIndex:(int)columnIdx stmt:(sqlite3_stmt *)stmt {
+- (NSString *)stringForColumnIndex:(int)columnIdx stmt:(sqlite3_stmt *)stmt {
   
   if (sqlite3_column_type(stmt, columnIdx) == SQLITE_NULL || (columnIdx < 0)) {
     return nil;
@@ -143,7 +139,7 @@ static NSString *const QUERY_TABLENAMES_SQL = @"SELECT name FROM sqlite_master W
   return [NSString stringWithUTF8String:c];
 }
 
-- (NSData*)dataForColumnIndex:(int)columnIdx stmt:(sqlite3_stmt *)stmt{
+- (NSData *)dataForColumnIndex:(int)columnIdx stmt:(sqlite3_stmt *)stmt{
   
   if (sqlite3_column_type(stmt, columnIdx) == SQLITE_NULL || (columnIdx < 0)) {
     return nil;
