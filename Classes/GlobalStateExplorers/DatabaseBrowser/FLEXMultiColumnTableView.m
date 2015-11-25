@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger,UIViewSeparatorLocation) {
 };
 
 @interface FLEXMultiColumnTableView ()
-<UITableViewDataSource, UITableViewDelegate,UIScrollViewDelegate>
+<UITableViewDataSource, UITableViewDelegate,UIScrollViewDelegate, FLEXTableContentCellDelegate>
 
 @property (nonatomic, weak) UIScrollView *contentScrollView;
 @property (nonatomic, weak) UIScrollView *headerScrollView;
@@ -190,7 +190,7 @@ static const CGFloat kColumnMargin = 1;
     FLEXTableContentCell *cell = [FLEXTableContentCell cellWithTableView:tableView
                                                             columnNumber:[self numberOfColumns]];
     cell.contentView.backgroundColor = backgroundColor;
-
+    cell.delegate = self;
 
     for (int i = 0 ; i < cell.labels.count; i++) {
       
@@ -205,12 +205,6 @@ static const CGFloat kColumnMargin = 1;
       
       label.text            = content;
       label.backgroundColor = backgroundColor;
-      
-      UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                action:@selector(labelDidTap:)];
-      [label addGestureRecognizer:gesture];
-      label.userInteractionEnabled = YES;
-      
     }
     
     return cell;
@@ -222,13 +216,6 @@ static const CGFloat kColumnMargin = 1;
     return cell;
     
   }
-}
-
-
-- (void)labelDidTap:(UIGestureRecognizer *)gesture
-{
-  UILabel *label = (UILabel *)gesture.view;
-  [self.delegate multiColumnTableView:self labelDidTapWithText:label.text];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -329,6 +316,14 @@ static const CGFloat kColumnMargin = 1;
   return kColumnMargin;
 }
 
+
+
+- (void)tableContentCell:(FLEXTableContentCell *)tableView labelDidTapWithText:(NSString *)text
+{
+  if ([self.delegate respondsToSelector:@selector(multiColumnTableView:labelDidTapWithText:)]) {
+    [self.delegate multiColumnTableView:self labelDidTapWithText:text];
+  }
+}
 
 #pragma mark -
 #pragma mark - Private

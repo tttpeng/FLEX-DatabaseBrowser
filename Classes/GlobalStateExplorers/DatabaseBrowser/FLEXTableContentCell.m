@@ -30,6 +30,11 @@
       label.backgroundColor = [UIColor greenColor];
       [labels addObject:label];
       
+      UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                action:@selector(labelDidTap:)];
+      [label addGestureRecognizer:gesture];
+      label.userInteractionEnabled = YES;
+
       [cell.contentView addSubview:label];
       cell.contentView.backgroundColor = [UIColor whiteColor];
     }
@@ -46,6 +51,14 @@
   for (int i = 0; i < self.labels.count; i++) {
     UILabel *label = self.labels[i];
     label.frame = CGRectMake(labelWidth * i + 5, 0, (labelWidth - 10), labelHeight);
+  }
+}
+
+- (void)labelDidTap:(UIGestureRecognizer *)gesture
+{
+  UILabel *label = (UILabel *)gesture.view;
+  if ([self.delegate respondsToSelector:@selector(tableContentCell:labelDidTapWithText:)]) {
+    [self.delegate tableContentCell:self labelDidTapWithText:label.text];
   }
 }
 

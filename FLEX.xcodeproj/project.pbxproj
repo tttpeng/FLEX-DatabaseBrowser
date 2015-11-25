@@ -14,9 +14,7 @@
 		044E618F1C035C390044A29F /* FLEXTableContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61871C035C390044A29F /* FLEXTableContentViewController.m */; };
 		044E61901C035C390044A29F /* FLEXTableListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 044E61881C035C390044A29F /* FLEXTableListViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		044E61911C035C390044A29F /* FLEXTableListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61891C035C390044A29F /* FLEXTableListViewController.m */; };
-		044E61941C035CF10044A29F /* FLEXlala.h in Headers */ = {isa = PBXBuildFile; fileRef = 044E61921C035CF10044A29F /* FLEXlala.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		044E61961C035E0F0044A29F /* FLEXDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61831C035C390044A29F /* FLEXDatabaseManager.m */; };
-		044E61971C035E470044A29F /* FLEXlala.m in Sources */ = {isa = PBXBuildFile; fileRef = 044E61931C035CF10044A29F /* FLEXlala.m */; };
 		044E619C1C035F980044A29F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 044E619B1C035F980044A29F /* libsqlite3.dylib */; };
 		3A4C94251B5B20570088C3F2 /* FLEX.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4C94241B5B20570088C3F2 /* FLEX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A4C94C51B5B21410088C3F2 /* FLEXArrayExplorerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4C943C1B5B21410088C3F2 /* FLEXArrayExplorerViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -684,7 +682,6 @@
 				044E618E1C035C390044A29F /* FLEXTableContentViewController.h in Headers */,
 				679F64861BD53B7B00A8C94C /* FLEXCookiesTableViewController.h in Headers */,
 				044E61901C035C390044A29F /* FLEXTableListViewController.h in Headers */,
-				044E61941C035CF10044A29F /* FLEXlala.h in Headers */,
 				3A4C95241B5B21410088C3F2 /* FLEXFileBrowserTableViewController.h in Headers */,
 				94AAF0381BAF2E1F00DE8760 /* FLEXKeyboardHelpViewController.h in Headers */,
 				94AAF03A1BAF2F0300DE8760 /* FLEXKeyboardShortcutManager.h in Headers */,
@@ -760,7 +757,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				044E61971C035E470044A29F /* FLEXlala.m in Sources */,
 				044E61961C035E0F0044A29F /* FLEXDatabaseManager.m in Sources */,
 				044E61911C035C390044A29F /* FLEXTableListViewController.m in Sources */,
 				942DCD871BAE0CA300DB5DC2 /* FLEXKeyboardShortcutManager.m in Sources */,
