@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @class FLEXMultiColumnTableView;
+
+@protocol FLEXMultiColumnTableViewDelegate <NSObject>
+
+
+- (void)didClickWithText:(NSString *)content;
+@end
 @protocol FLEXMultiColumnTableViewDataSource <NSObject>
 
 @required
@@ -32,6 +38,8 @@
 @interface FLEXMultiColumnTableView : UIView
 
 @property (nonatomic, weak) id<FLEXMultiColumnTableViewDataSource>dataSource;
+@property (nonatomic, weak) id<FLEXMultiColumnTableViewDelegate>delegate;
+
 
 - (void)reloadData;
 

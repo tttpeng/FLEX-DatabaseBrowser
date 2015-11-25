@@ -10,7 +10,7 @@
 #import "FLEXMultiColumnTableView.h"
 
 
-@interface FLEXTableContentViewController ()<FLEXMultiColumnTableViewDataSource>
+@interface FLEXTableContentViewController ()<FLEXMultiColumnTableViewDataSource, FLEXMultiColumnTableViewDelegate>
 
 @property (nonatomic, strong)FLEXMultiColumnTableView *multiColumView;
 
@@ -35,11 +35,25 @@
     _multiColumView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _multiColumView.backgroundColor  = [UIColor whiteColor];
     _multiColumView.dataSource       = self;
+    _multiColumView.delegate = self;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor        = [UIColor redColor];
     [self.view addSubview:_multiColumView];
   }
   return self;
+}
+
+
+- (void)didClickWithText:(NSString *)content
+{
+  UIViewController *viewController = [[UIViewController alloc] init];
+  UILabel *label = [[UILabel alloc] initWithFrame:viewController.view.frame];
+  label.text = content;
+  label.numberOfLines = 0;
+  label.backgroundColor = [UIColor whiteColor];
+  [viewController.view addSubview:label];
+  
+  [self.navigationController pushViewController:viewController animated:YES];
 }
 
 

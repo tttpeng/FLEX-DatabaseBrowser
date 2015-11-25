@@ -191,7 +191,11 @@ static const CGFloat kColumnMargin = 1;
                                                           withDataSource:self];
     for (int i = 0 ; i < cell.labels.count; i++) {
       UILabel *label = cell.labels[i];
+      
+      UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click:)];
       label.text = [NSString stringWithFormat:@"%@",self.rowData[i]];
+      [label addGestureRecognizer:gesture];
+      label.userInteractionEnabled = YES;
     }
     return cell;
   }
@@ -204,6 +208,16 @@ static const CGFloat kColumnMargin = 1;
   }
 }
 
+
+- (void)click:(UIGestureRecognizer *)gesture
+{
+  NSLog(@"touche ----->%@",gesture.view);
+  UILabel *label = gesture.view;
+  
+  [self.delegate didClickWithText:label.text];
+  
+  
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
   return [self.dataSource numberOfRowsInTableView:self];
@@ -237,6 +251,7 @@ static const CGFloat kColumnMargin = 1;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+  NSLog(@"select ------>%@",indexPath);
   if (tableView == self.leftTableView) {
     [self.contentTableView selectRowAtIndexPath:indexPath
                                        animated:NO
