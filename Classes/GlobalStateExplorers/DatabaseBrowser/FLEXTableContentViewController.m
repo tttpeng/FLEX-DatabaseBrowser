@@ -8,11 +8,13 @@
 
 #import "FLEXTableContentViewController.h"
 #import "FLEXMultiColumnTableView.h"
+#import "FLEXTableCollectionView.h"
 
 
-@interface FLEXTableContentViewController ()<FLEXMultiColumnTableViewDataSource>
+@interface FLEXTableContentViewController ()<FLEXTableCollectionViewDelegate>
 
-@property (nonatomic, strong)FLEXMultiColumnTableView *multiColumView;
+//@property (nonatomic, weak)FLEXMultiColumnTableView *multiColumView;
+@property (nonatomic, weak)FLEXTableCollectionView *tableCollectionView;
 
 @end
 
@@ -29,15 +31,27 @@
     if (rectStatus.size.height == 0) {
       y = 32;
     }
-    _multiColumView = [[FLEXMultiColumnTableView alloc] initWithFrame:
-                       CGRectMake(0, y, self.view.frame.size.width, self.view.frame.size.height - y)];
     
-    _multiColumView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _multiColumView.backgroundColor  = [UIColor whiteColor];
-    _multiColumView.dataSource       = self;
+    
+    FLEXTableCollectionView *tableCollectionView = [[FLEXTableCollectionView alloc] initWithFrame:CGRectMake(0, y, self.view.frame.size.width, self.view.frame.size.height - y)];
+    
+    tableCollectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    tableCollectionView.backgroundColor  = [UIColor whiteColor];
+    tableCollectionView.dataSource       = self;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor        = [UIColor redColor];
-    [self.view addSubview:_multiColumView];
+    [self.view addSubview:tableCollectionView];
+    self.tableCollectionView = tableCollectionView;
+    
+    //    _multiColumView = [[FLEXMultiColumnTableView alloc] initWithFrame:
+    //                       CGRectMake(0, y, self.view.frame.size.width, self.view.frame.size.height - y)];
+    //
+    //    _multiColumView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    //    _multiColumView.backgroundColor  = [UIColor whiteColor];
+    //    _multiColumView.dataSource       = self;
+    //    self.automaticallyAdjustsScrollViewInsets = NO;
+    //    self.view.backgroundColor        = [UIColor redColor];
+    //    [self.view addSubview:_multiColumView];
   }
   return self;
 }
@@ -51,11 +65,11 @@
                withTransitionCoordinator:coordinator];
   [coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
     if (newCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) {
-
-      _multiColumView.frame = CGRectMake(0, 32, self.view.frame.size.width, self.view.frame.size.height - 32);
+      
+      _tableCollectionView.frame = CGRectMake(0, 32, self.view.frame.size.width, self.view.frame.size.height - 32);
     }
     else {
-      _multiColumView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64);
+      _tableCollectionView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64);
     }
     [self.view setNeedsLayout];
   } completion:nil];
@@ -64,7 +78,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [self.multiColumView reloadData];
+  [self.tableCollectionView reloadData];
   
 }
 - (NSInteger)numberOfColumnsInTableView:(FLEXMultiColumnTableView *)tableView
@@ -79,7 +93,7 @@
 
 - (NSString *)columnNameInColumn:(NSInteger)column
 {
-    return self.columnsArray[column];
+  return self.columnsArray[column];
 }
 
 

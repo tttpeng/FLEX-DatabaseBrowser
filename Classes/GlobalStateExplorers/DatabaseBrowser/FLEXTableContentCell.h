@@ -8,23 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@class FLEXTableContentCell;
-@protocol FLEXTableContentCellDatasource <NSObject>
+@interface FLEXTableContentCell : UICollectionViewCell
 
-- (NSInteger)numberColumnsForCell;
-- (CGFloat)heightForCell;
-- (CGFloat)tableContentCell:(FLEXTableContentCell *)cell widthForntCellInColumn:(NSInteger)column;
+@property (nonatomic, weak) UILabel *textlabel;
 
-@end
-
-@interface FLEXTableContentCell : UITableViewCell
-
-@property (nonatomic, strong)NSArray *labels;
-
-@property (nonatomic, weak)id<FLEXTableContentCellDatasource> dataSource;
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                           height:(CGFloat)height
-                   withDataSource:(id<FLEXTableContentCellDatasource>)dataSource;
 
 @end

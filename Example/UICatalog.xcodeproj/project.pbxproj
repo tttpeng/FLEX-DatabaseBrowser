@@ -53,6 +53,7 @@
 		679F6A121BD61B2400A8C94C /* FLEXCookiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 679F6A111BD61B2400A8C94C /* FLEXCookiesTableViewController.m */; };
 		77C151D11C04365700EC5536 /* FLEXTableContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C151D01C04365700EC5536 /* FLEXTableContentCell.m */; };
 		77C2DEFD1C046D5F00F9E741 /* FLEXTableLeftCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C2DEFC1C046D5F00F9E741 /* FLEXTableLeftCell.m */; };
+		77D58BE41C058F0D00F4FB12 /* FLEXTableCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D58BE31C058F0D00F4FB12 /* FLEXTableCollectionView.m */; };
 		9421B88D1A8BBCB200BA3E46 /* FLEXNetworkHistoryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9421B8801A8BBCB200BA3E46 /* FLEXNetworkHistoryTableViewController.m */; };
 		9421B88E1A8BBCB200BA3E46 /* FLEXNetworkRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9421B8821A8BBCB200BA3E46 /* FLEXNetworkRecorder.m */; };
 		9421B88F1A8BBCB200BA3E46 /* FLEXNetworkTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 9421B8841A8BBCB200BA3E46 /* FLEXNetworkTransaction.m */; };
@@ -205,6 +206,8 @@
 		77C151D01C04365700EC5536 /* FLEXTableContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXTableContentCell.m; sourceTree = "<group>"; };
 		77C2DEFB1C046D5F00F9E741 /* FLEXTableLeftCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXTableLeftCell.h; sourceTree = "<group>"; };
 		77C2DEFC1C046D5F00F9E741 /* FLEXTableLeftCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXTableLeftCell.m; sourceTree = "<group>"; };
+		77D58BE21C058F0D00F4FB12 /* FLEXTableCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXTableCollectionView.h; sourceTree = "<group>"; };
+		77D58BE31C058F0D00F4FB12 /* FLEXTableCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXTableCollectionView.m; sourceTree = "<group>"; };
 		9421B87F1A8BBCB200BA3E46 /* FLEXNetworkHistoryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXNetworkHistoryTableViewController.h; sourceTree = "<group>"; };
 		9421B8801A8BBCB200BA3E46 /* FLEXNetworkHistoryTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLEXNetworkHistoryTableViewController.m; sourceTree = "<group>"; };
 		9421B8811A8BBCB200BA3E46 /* FLEXNetworkRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXNetworkRecorder.h; sourceTree = "<group>"; };
@@ -355,6 +358,8 @@
 			children = (
 				044E619E1C03602A0044A29F /* FLEXDatabaseManager.h */,
 				044E619F1C03602A0044A29F /* FLEXDatabaseManager.m */,
+				77D58BE21C058F0D00F4FB12 /* FLEXTableCollectionView.h */,
+				77D58BE31C058F0D00F4FB12 /* FLEXTableCollectionView.m */,
 				044E61A21C03602A0044A29F /* FLEXMultiColumnTableView.h */,
 				044E61A31C03602A0044A29F /* FLEXMultiColumnTableView.m */,
 				044E61A41C03602A0044A29F /* FLEXTableContentViewController.h */,
@@ -886,6 +891,7 @@
 				944F74AC197B458C009AB039 /* FLEXToolbarItem.m in Sources */,
 				944F74B7197B458C009AB039 /* FLEXImagePreviewViewController.m in Sources */,
 				650855EB1A9007D5006109A1 /* FLEXArgumentInputDateView.m in Sources */,
+				77D58BE41C058F0D00F4FB12 /* FLEXTableCollectionView.m in Sources */,
 				944F7498197B458C009AB039 /* FLEXArgumentInputColorView.m in Sources */,
 				944F74A0197B458C009AB039 /* FLEXArgumentInputTextView.m in Sources */,
 				944F749C197B458C009AB039 /* FLEXArgumentInputNumberView.m in Sources */,

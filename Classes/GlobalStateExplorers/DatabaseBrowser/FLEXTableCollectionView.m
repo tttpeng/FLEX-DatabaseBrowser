@@ -1,14 +1,14 @@
 //
-//  PTMultiColumnTableView.m
-//  PTMultiColumnTableViewDemo
+//  PTTableCollectionView.m
+//  PTTableCollectionView
 //
-//  Created by Peng Tao on 15/11/16.
+//  Created by Peng Tao on 15/11/25.
 //  Copyright © 2015年 Peng Tao. All rights reserved.
 //
 
-#import "FLEXMultiColumnTableView.h"
-#import "FLEXTableContentCell.h"
+#import "FLEXTableCollectionView.h"
 #import "FLEXTableLeftCell.h"
+#import "FLEXTableContentCell.h"
 
 
 typedef NS_ENUM(NSInteger,UIViewSeparatorLocation) {
@@ -18,21 +18,25 @@ typedef NS_ENUM(NSInteger,UIViewSeparatorLocation) {
   UIViewSeparatorLocationRight
 };
 
-@interface FLEXMultiColumnTableView ()
-<UITableViewDataSource, UITableViewDelegate,UIScrollViewDelegate>
 
-@property (nonatomic, weak) UIScrollView *contentScrollView;
-@property (nonatomic, weak) UIScrollView *headerScrollView;
-@property (nonatomic, weak) UITableView  *leftTableView;
-@property (nonatomic, weak) UITableView  *contentTableView;
-@property (nonatomic, weak) UIView       *leftHeader;
+#define kDefaultBackgroundColor [UIColor colorWithWhite:0.850 alpha:1.000]
 
-@property (nonatomic, strong) NSArray *rowData;
+@interface FLEXTableCollectionView ()
+<UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
+
+@property (nonatomic, weak) UIScrollView     *contentScrollView;
+@property (nonatomic, weak) UIScrollView     *headerScrollView;
+@property (nonatomic, weak) UITableView      *leftTableView;
+@property (nonatomic, weak) UICollectionView *contentCollectionView;
+@property (nonatomic, weak) UIView           *leftHeader;
+
+@property (nonatomic, strong) NSArray *currentSectionData;
+
 @end
 
-static const CGFloat kColumnMargin = 1;
+@implementation FLEXTableCollectionView
 
-@implementation FLEXMultiColumnTableView
+static const CGFloat kColumnMargin = 1;
 
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -64,13 +68,14 @@ static const CGFloat kColumnMargin = 1;
   for (int i = 0; i < rowsCount; i++) {
     contentWidth += [self.dataSource multiColumnTableView:self widthForContentCellInColumn:i];
   }
+  contentWidth = contentWidth + ([self numberOfColumns] - 1) * [self columnMargin];
   
   self.leftTableView.frame           = CGRectMake(0, topheaderHeight, leftHeaderWidth, height - topheaderHeight);
   self.headerScrollView.frame        = CGRectMake(leftHeaderWidth, 0, width - leftHeaderWidth, topheaderHeight);
-  self.headerScrollView.contentSize  = CGSizeMake( self.contentTableView.frame.size.width, self.headerScrollView.frame.size.height);
-  self.contentTableView.frame        = CGRectMake(0, 0, contentWidth + [self numberOfColumns] * [self columnMargin] , height - 50);
+  self.headerScrollView.contentSize  = CGSizeMake( self.contentCollectionView.frame.size.width, self.headerScrollView.frame.size.height);
+  self.contentCollectionView.frame        = CGRectMake(0, 0, contentWidth , height - topheaderHeight);
   self.contentScrollView.frame       = CGRectMake(leftHeaderWidth, topheaderHeight, width - leftHeaderWidth, height - topheaderHeight);
-  self.contentScrollView.contentSize = self.contentTableView.frame.size;
+  self.contentScrollView.contentSize = self.contentCollectionView.frame.size;
   self.leftHeader.frame              = CGRectMake(0, 0, [self leftHeaderWidth], [self topHeaderHeight]);
   
   for (UIView *subView in self.leftHeader.subviews) {
@@ -79,7 +84,6 @@ static const CGFloat kColumnMargin = 1;
   [self addSeparatorLineInView:self.leftHeader andWidth:1 andLocation:UIViewSeparatorLocationRight andColor:[UIColor grayColor]];
   [self addSeparatorLineInView:self.leftHeader andWidth:1 andLocation:UIViewSeparatorLocationBottom andColor:[UIColor grayColor]];
 }
-
 
 
 - (void)loadUI
@@ -95,7 +99,6 @@ static const CGFloat kColumnMargin = 1;
   [self loadContentData];
   [self loadHeaderData];
 }
-
 #pragma mark - UI
 
 - (void)loadHeaderScrollView
@@ -113,16 +116,22 @@ static const CGFloat kColumnMargin = 1;
   scrollView.bounces       = NO;
   scrollView.delegate      = self;
   
-  UITableView *tableView   = [[UITableView alloc] init];
-  tableView.delegate       = self;
-  tableView.dataSource     = self;
-  tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+  
+  UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+  [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
+  
+  UICollectionView *collectionView   = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+  collectionView.delegate       = self;
+  collectionView.dataSource     = self;
+  collectionView.backgroundColor = kDefaultBackgroundColor;
+  [collectionView setCollectionViewLayout:layout];
+  [collectionView registerClass:[FLEXTableContentCell class] forCellWithReuseIdentifier:@"FLEXTableContentCell"];
   
   [self addSubview:scrollView];
-  [scrollView addSubview:tableView];
+  [scrollView addSubview:collectionView];
   
-  self.contentScrollView = scrollView;
-  self.contentTableView    = tableView;
+  self.contentScrollView     = scrollView;
+  self.contentCollectionView = collectionView;
   
 }
 
@@ -132,6 +141,7 @@ static const CGFloat kColumnMargin = 1;
   leftTableView.delegate = self;
   leftTableView.dataSource = self;
   leftTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+  leftTableView.backgroundColor = kDefaultBackgroundColor;
   
   self.leftTableView = leftTableView;
   UIView *leftHeader = [[UIView alloc] init];
@@ -139,6 +149,9 @@ static const CGFloat kColumnMargin = 1;
   self.leftHeader = leftHeader;
   [self addSubview:leftHeader];
   [self addSubview:leftTableView];
+  
+  
+  
   
 }
 
@@ -158,7 +171,7 @@ static const CGFloat kColumnMargin = 1;
     w = [self contentWidthForColumn:i] + [self columnMargin];
     UIView *view = [[UIView alloc] initWithFrame:
                     CGRectMake(x, 0, w , [self topHeaderHeight])];
-    view.backgroundColor = [UIColor lightGrayColor];
+    view.backgroundColor = kDefaultBackgroundColor;
     
     UILabel *label = [[UILabel alloc] initWithFrame:
                       CGRectMake(0, 0, w - [self columnMargin], [self topHeaderHeight] - 1 )];
@@ -174,7 +187,7 @@ static const CGFloat kColumnMargin = 1;
 
 - (void)loadContentData
 {
-  [self.contentTableView reloadData];
+  [self.contentCollectionView reloadData];
 }
 
 - (void)loadLeftViewData
@@ -183,70 +196,6 @@ static const CGFloat kColumnMargin = 1;
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
-    FLEXTableLeftCell *cell = [FLEXTableLeftCell cellWithTableView:tableView
-                                                            height:[self contentHeightForRow:indexPath.row]];
-    cell.titlelabel.text = [self.dataSource rowNameInRow:indexPath.row];
-    return cell;
-}
-
-
-
-
-
-- (void)labelClick:(UILabel *)label
-{
-  
-  NSLog(@"click--->%d",label.tag);
-  
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-  return [self.dataSource numberOfRowsInTableView:self];
-}
-
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  return [self.dataSource multiColumnTableView:self heightForContentCellInRow:indexPath.row];
-}
-
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-  if (scrollView == self.contentScrollView) {
-    self.headerScrollView.contentOffset = scrollView.contentOffset;
-  }
-  else if (scrollView == self.headerScrollView) {
-    self.contentScrollView.contentOffset = scrollView.contentOffset;
-  }
-  else if (scrollView == self.leftTableView) {
-    self.contentTableView.contentOffset = scrollView.contentOffset;
-  }
-  else if (scrollView == self.contentTableView) {
-    self.leftTableView.contentOffset = scrollView.contentOffset;
-  }
-}
-
-#pragma mark -
-#pragma mark UITableView Delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  if (tableView == self.leftTableView) {
-    [self.contentTableView selectRowAtIndexPath:indexPath
-                                       animated:NO
-                                 scrollPosition:UITableViewScrollPositionNone];
-  }
-  else if (tableView == self.contentTableView) {
-    [self.leftTableView selectRowAtIndexPath:indexPath
-                                    animated:NO
-                              scrollPosition:UITableViewScrollPositionNone];
-  }
-}
 
 #pragma mark -
 #pragma mark DataSource Accessor
@@ -303,19 +252,87 @@ static const CGFloat kColumnMargin = 1;
 
 
 #pragma mark -
-#pragma mark - Cell DataSource
-
-- (NSInteger)numberColumnsForCell
+#pragma mark - ScrollView Delegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-  return [self.dataSource numberOfColumnsInTableView:self];
+  if (scrollView == self.headerScrollView) {
+    self.contentScrollView.contentOffset = scrollView.contentOffset;
+  }
+  else if (scrollView == self.contentScrollView) {
+    self.headerScrollView.contentOffset = scrollView.contentOffset;
+  }
+  else if (scrollView == self.leftTableView) {
+    self.contentCollectionView.contentOffset = scrollView.contentOffset;
+  }
+  else if (scrollView == self.contentCollectionView) {
+    self.leftTableView.contentOffset = scrollView.contentOffset;
+  }
+
 }
 
 
-- (CGFloat)tableContentCell:(FLEXTableContentCell *)cell widthForntCellInColumn:(NSInteger)column
+#pragma mark -
+#pragma mark - DataSource
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  return [self contentWidthForColumn:column];
+  FLEXTableLeftCell *cell = [FLEXTableLeftCell cellWithTableView:tableView
+                                                      height:[self contentHeightForRow:indexPath.row]];
+  cell.titlelabel.text = [self.dataSource rowNameInRow:indexPath.row];
+  return cell;
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+  return [self numberOfrows];
+}
+
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  if (indexPath.row == 0) {
+    self.currentSectionData = [self.dataSource contentAtRow:indexPath.section];
+  }
+  
+  FLEXTableContentCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"FLEXTableContentCell" forIndexPath:indexPath];  
+  cell.textlabel.text =  [NSString stringWithFormat:@"%@",self.currentSectionData[indexPath.row]];
+//  cell.layer.shouldRasterize = YES;
+//  cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
+//  cell.textlabel.text = [self contentAtColumn:indexPath.row row:indexPath.section];
+  return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  return [self contentHeightForRow:indexPath.row] + 1;
+}
+
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+  return [self numberOfrows];
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section;
+{
+  return [self numberOfColumns];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  return CGSizeMake([self contentWidthForColumn:indexPath.row], [self contentHeightForRow:indexPath.section]);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+  return [self columnMargin];
+  
+}
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+  return UIEdgeInsetsMake(0, 0, 1, 0);
+}
 
 #pragma mark -
 #pragma mark - Private
@@ -358,5 +375,4 @@ static const CGFloat kColumnMargin = 1;
   CGFloat blue = (CGFloat)random()/(CGFloat)RAND_MAX;
   return [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];
 }
-
 @end
