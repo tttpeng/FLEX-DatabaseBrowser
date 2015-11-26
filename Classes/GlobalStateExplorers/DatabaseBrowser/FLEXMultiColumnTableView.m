@@ -27,6 +27,7 @@ typedef NS_ENUM(NSInteger,UIViewSeparatorLocation) {
 @property (nonatomic, weak) UITableView  *contentTableView;
 @property (nonatomic, weak) UIView       *leftHeader;
 
+@property (nonatomic, strong) NSDictionary *sortStatusDict;
 @property (nonatomic, strong) NSArray *rowData;
 @end
 
@@ -97,6 +98,8 @@ static const CGFloat kColumnMargin = 1;
   UIScrollView *headerScrollView = [[UIScrollView alloc] init];
   headerScrollView.delegate      = self;
   self.headerScrollView          = headerScrollView;
+  self.headerScrollView.backgroundColor =  [UIColor colorWithWhite:0.803 alpha:0.850];
+  
   [self addSubview:headerScrollView];
 }
 
@@ -150,22 +153,48 @@ static const CGFloat kColumnMargin = 1;
   CGFloat w = 0.0;
   for (int i = 0; i < [self numberOfColumns] ; i++) {
     w = [self contentWidthForColumn:i] + [self columnMargin];
-    UIView *view = [[UIView alloc] initWithFrame:
-                    CGRectMake(x, 0, w , [self topHeaderHeight])];
-    view.backgroundColor = [UIColor colorWithWhite:0.850 alpha:0.650];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:
-                      CGRectMake(0, 0, w - [self columnMargin], [self topHeaderHeight] - 1 )];
-    label.backgroundColor = [UIColor whiteColor];
-    label.text            = [self columnTitleForColumn:i];
-    label.textAlignment   = NSTextAlignmentCenter;
-    label.backgroundColor = [UIColor whiteColor];
-    label.font            = [UIFont systemFontOfSize:13.0];
-    [view addSubview:label];
-    [self.headerScrollView addSubview:view];
+    FLEXTableColumnHeader *cell = [[FLEXTableColumnHeader alloc] initWithFrame:CGRectMake(x, 0, w, [self topHeaderHeight] - 1)];
+    cell.label.text = [self columnTitleForColumn:i];
+    [self.headerScrollView addSubview:cell];
+    
+    FLEXTableColumnHeaderSortType type = [self.sortStatusDict[[self columnTitleForColumn:i]] integerValue];
+    [cell changeSortStatusWithType:type];
+    
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(contentHeaderTap:)];
+    [cell addGestureRecognizer:gesture];
+    cell.userInteractionEnabled = YES;
+    
     x = x + w;
   }
 }
+
+- (void)contentHeaderTap:(UIGestureRecognizer *)gesture
+{
+  FLEXTableColumnHeader *header = (FLEXTableColumnHeader *)gesture.view;
+  NSString *string = header.label.text;
+  FLEXTableColumnHeaderSortType currentType = [self.sortStatusDict[string] integerValue];
+  FLEXTableColumnHeaderSortType newType ;
+  
+  switch (currentType) {
+    case FLEXTableColumnHeaderSortTypeNone:
+      newType = FLEXTableColumnHeaderSortTypeAsc;
+      break;
+    case FLEXTableColumnHeaderSortTypeAsc:
+      newType = FLEXTableColumnHeaderSortTypeDesc;
+      break;
+    case FLEXTableColumnHeaderSortTypeDesc:
+      newType = FLEXTableColumnHeaderSortTypeAsc;
+      break;
+  }
+  
+  self.sortStatusDict = @{header.label.text : @(newType)};
+  [header changeSortStatusWithType:newType];
+  [self.delegate multiColumnTableView:self headerTapWithText:string sortType:newType];
+  
+}
+
 
 - (void)loadContentData
 {
@@ -184,14 +213,14 @@ static const CGFloat kColumnMargin = 1;
   if (indexPath.row % 2 != 0) {
     backgroundColor = [UIColor colorWithWhite:0.950 alpha:0.750];
   }
-
+  
   if (tableView != self.leftTableView) {
     self.rowData = [self.dataSource contentAtRow:indexPath.row];
     FLEXTableContentCell *cell = [FLEXTableContentCell cellWithTableView:tableView
                                                             columnNumber:[self numberOfColumns]];
     cell.contentView.backgroundColor = backgroundColor;
     cell.delegate = self;
-
+    
     for (int i = 0 ; i < cell.labels.count; i++) {
       
       UILabel *label  = cell.labels[i];
@@ -202,11 +231,9 @@ static const CGFloat kColumnMargin = 1;
         label.textColor = [UIColor lightGrayColor];
         content = @"NULL";
       }
-      
       label.text            = content;
       label.backgroundColor = backgroundColor;
     }
-    
     return cell;
   }
   else {
@@ -214,7 +241,6 @@ static const CGFloat kColumnMargin = 1;
     cell.contentView.backgroundColor = backgroundColor;
     cell.titlelabel.text             = [self.dataSource rowNameInRow:indexPath.row];
     return cell;
-    
   }
 }
 

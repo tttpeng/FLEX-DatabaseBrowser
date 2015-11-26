@@ -38,11 +38,12 @@
     _multiColumView.dataSource                = self;
     _multiColumView.delegate                  = self;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    
     [self.view addSubview:_multiColumView];
   }
   return self;
 }
-
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -89,9 +90,13 @@
 
 - (NSArray *)contentAtRow:(NSInteger)row
 {
+  NSMutableArray *result = [NSMutableArray array];
   if (self.contensArray.count > row) {
     NSDictionary *dic = self.contensArray[row];
-    return  [dic allValues];
+    for (int i = 0; i < self.columnsArray.count; i ++) {
+      [result addObject:dic[self.columnsArray[i]]];
+    }
+    return  result;
   }
   return nil;
 }
@@ -110,7 +115,7 @@
 
 - (CGFloat)heightForTopHeaderInTableView:(FLEXMultiColumnTableView *)tableView
 {
-  return 30;
+  return 40;
 }
 
 - (CGFloat)WidthForLeftHeaderInTableView:(FLEXMultiColumnTableView *)tableView
@@ -131,6 +136,30 @@
 {
   FLEXWebViewController * detailViewController = [[FLEXWebViewController alloc] initWithText:text];
   [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+- (void)multiColumnTableView:(FLEXMultiColumnTableView *)tableView headerTapWithText:(NSString *)text sortType:(FLEXTableColumnHeaderSortType)type
+{
+  
+  NSArray *sortContentData = [self.contensArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    
+    if ([obj1 objectForKey:text] == [NSNull null]) {
+      return 0;
+    }
+    if ([obj2 objectForKey:text] == [NSNull null]) {
+      return 1;
+    }
+    NSComparisonResult result =  [[obj1 objectForKey:text] compare:[obj2 objectForKey:text]];
+    
+    return result;
+  }];
+  if (type == FLEXTableColumnHeaderSortTypeDesc) {    
+    NSEnumerator *contentReverseEvumerator = [sortContentData reverseObjectEnumerator];
+    sortContentData = [NSArray arrayWithArray:[contentReverseEvumerator allObjects]];
+  }
+  
+  self.contensArray = sortContentData;
+  [self.multiColumView reloadData];
 }
 
 #pragma mark -

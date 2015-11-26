@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FLEXTableColumnHeader.h"
 
 @class FLEXMultiColumnTableView;
 
@@ -14,6 +15,7 @@
 
 @optional
 - (void)multiColumnTableView:(FLEXMultiColumnTableView *)tableView labelDidTapWithText:(NSString *)text;
+- (void)multiColumnTableView:(FLEXMultiColumnTableView *)tableView headerTapWithText:(NSString *)text sortType:(FLEXTableColumnHeaderSortType)type;
 
 @end
 @protocol FLEXMultiColumnTableViewDataSource <NSObject>
