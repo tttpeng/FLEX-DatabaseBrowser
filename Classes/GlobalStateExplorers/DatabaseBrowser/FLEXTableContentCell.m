@@ -30,7 +30,7 @@
       label.backgroundColor = [UIColor greenColor];
       [labels addObject:label];
       
-      UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+      UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:cell
                                                                                 action:@selector(labelDidTap:)];
       [label addGestureRecognizer:gesture];
       label.userInteractionEnabled = YES;
@@ -53,6 +53,7 @@
     label.frame = CGRectMake(labelWidth * i + 5, 0, (labelWidth - 10), labelHeight);
   }
 }
+
 
 - (void)labelDidTap:(UIGestureRecognizer *)gesture
 {
