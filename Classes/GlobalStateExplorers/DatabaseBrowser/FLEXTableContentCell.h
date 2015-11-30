@@ -16,7 +16,6 @@
 
 @end
 
-
 @interface FLEXTableContentCell : UITableViewCell
 
 @property (nonatomic, strong)NSArray *labels;

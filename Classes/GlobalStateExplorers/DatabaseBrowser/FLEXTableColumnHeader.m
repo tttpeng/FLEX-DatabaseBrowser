@@ -17,11 +17,8 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
   self = [super initWithFrame:frame];
-  if (self) {
-    
-    
+  if (self) {      
     self.backgroundColor = [UIColor whiteColor];
-    
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, frame.size.width - 25, frame.size.height)];
     label.font = [UIFont systemFontOfSize:13.0];

@@ -22,7 +22,6 @@
 
 @required
 
-
 - (NSInteger)numberOfColumnsInTableView:(FLEXMultiColumnTableView *)tableView;
 - (NSInteger)numberOfRowsInTableView:(FLEXMultiColumnTableView *)tableView;
 - (NSString *)columnNameInColumn:(NSInteger)column;
@@ -43,8 +42,6 @@
 @property (nonatomic, weak) id<FLEXMultiColumnTableViewDataSource>dataSource;
 @property (nonatomic, weak) id<FLEXMultiColumnTableViewDelegate>delegate;
 
-
 - (void)reloadData;
-
 
 @end

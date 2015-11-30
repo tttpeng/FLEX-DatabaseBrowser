@@ -357,9 +357,9 @@
 			isa = PBXGroup;
 			children = (
 				044E619E1C03602A0044A29F /* FLEXDatabaseManager.h */,
+				044E619F1C03602A0044A29F /* FLEXDatabaseManager.m */,
 				770E70001C06BB6B008E8885 /* FLEXTableColumnHeader.h */,
 				770E70011C06BB6B008E8885 /* FLEXTableColumnHeader.m */,
-				044E619F1C03602A0044A29F /* FLEXDatabaseManager.m */,
 				044E61A21C03602A0044A29F /* FLEXMultiColumnTableView.h */,
 				044E61A31C03602A0044A29F /* FLEXMultiColumnTableView.m */,
 				044E61A41C03602A0044A29F /* FLEXTableContentViewController.h */,

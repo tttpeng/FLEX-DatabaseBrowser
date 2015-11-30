@@ -19,7 +19,6 @@
 
 @implementation FLEXTableContentViewController
 
-
 - (instancetype)init
 {
   self = [super init];

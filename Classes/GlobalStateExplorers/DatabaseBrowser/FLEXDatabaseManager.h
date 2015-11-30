@@ -18,5 +18,4 @@
 - (NSArray *)queryAllColumnsWithTableName:(NSString *)tableName;
 - (NSArray *)queryAllDataWithTableName:(NSString *)tableName;
 
-
 @end
